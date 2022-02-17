@@ -13,6 +13,7 @@
 import RPi.GPIO as GPIO
 from RpiMotorLib import RpiMotorLib
 import time
+import sys
 
 ################################
 # RPi and Motor Pre-allocations
@@ -35,9 +36,9 @@ GPIO.setup(EN_pin,GPIO.OUT) # set enable pin as output
 GPIO.output(EN_pin,GPIO.LOW) # pull enable to low to enable motor
 mymotortest.motor_go(True, # True=Clockwise, False=Counter-Clockwise
                      "1/16" , # Step type (Full,Half,1/4,1/8,1/16,1/32)
-                     3200, # number of steps
+                     int(sys.argv[1]), # number of steps
                      .00001, # step delay [sec]
                      False, # True = print verbose output 
                      .05) # initial delay [sec]
-print("Done")
+print(int(sys.argv[1]))
 GPIO.cleanup() # clear GPIO allocations after run
