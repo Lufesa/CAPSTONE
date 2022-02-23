@@ -9,8 +9,8 @@
 #######################################
 #
 
-#import RPi.GPIO as GPIO
-#from RpiMotorLib import RpiMotorLib
+import RPi.GPIO as GPIO
+from RpiMotorLib import RpiMotorLib
 import time
 import sys
 
@@ -24,9 +24,9 @@ RESOLUTION = {'Full': 200,
               '1/32': 6400}
 
 
-def convert_to_steps(turns, resolution = "1/16"):
-    return int(turns*RESOLUTION.get(resolution))
 
+def convert_to_steps(turns, resolution = "1/16"):
+    return  abs(int(turns*RESOLUTION.get(resolution)))
 
 step = [21, 26, 19, 13, 6, 5, 7, 8] # Step GPIO Pin
 
@@ -47,15 +47,15 @@ motors = []
 for i in range (len(step)):
     motors.append(RpiMotorLib.A4988Nema(direction, step[i], ms, "A4988"))
     #motors.append(step[i])
-    print (motors)
+    #print (motors)
 
 
-motors[0].motor_go(True, # True=Clockwise, False=Counter-Clockwise
+motors[0].motor_go(int(sys.argv[2]),# True=Clockwise, False=Counter-Clockwise
                      "1/16" , # Step type (Full,Half,1/4,1/8,1/16,1/32)
-                     convert_to_steps(float(sys.argv[1])), # number of steps
+                     convert_to_steps(abs(float(sys.argv[1]))), # number of steps
                      .00001, # step delay [sec]
                      False, # True = print verbose output 
                      .05) # initial delay [sec]
-print ("Did ", (convert_to_steps(0.5)), "turns")
+print ("Did ", convert_to_steps(abs(float(sys.argv[1]))), "steps")
 
 
